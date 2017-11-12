@@ -4,14 +4,25 @@ import os
 import time
 import json
 import twitter
+import requests
 import argparse
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 
+def check_bal():
+    api_key=os.environ['ETHERSCAN_API_KEY']
+    url='https://rinkeby.etherscan.io/api?module=account&action=balance&address={0}&tag=latest&apikey={1}'.format(addr,api_key)
+    r=requests.get(url)
+    data=r.json()
+    bal=int(data['result'])
+    wei=1000000000000000000 
+    eth=bal/wei
+    return eth
+
 def tweet_wallet():
     statuses=api.GetUserTimeline(screen_name=uname)
-    status=api.PostUpdate(msg)
+    status=api.PostUpdate(addr)
     data=str(status)
     json_obj=json.dumps(data)
     
@@ -70,7 +81,7 @@ if __name__ == '__main__':
     phantom=args.phantom
 
     uname=raw_input('Enter Twitter username: ')
-    msg=raw_input('Enter wallet address: ')
+    addr=raw_input('Enter wallet address: ')
 
     api=twitter.Api(consumer_key=os.environ['TWITTER_CONSUMER_KEY'],consumer_secret=os.environ['TWITTER_CONSUMER_SECRET'],access_token_key=os.environ['TWITTER_ACCESS_TOKEN_KEY'],access_token_secret=os.environ['TWITTER_ACCESS_TOKEN_SECRET'])
 
@@ -82,6 +93,13 @@ if __name__ == '__main__':
     else:
         tweet_url,tweet_id=tweet_wallet()
         reap(tweet_url)
+        eth=check_bal()
+        funded=(eth) + 18
+        print(eth)
+        if eth < funded:
+            reap(tweet_url)
+            print('reaping..')
+            time.sleep(3)
         time.sleep(3)
         destroy_tweet(tweet_id)
 
