@@ -29,7 +29,7 @@ except:
 
 def check_bal():
     api_key=os.environ['ETHERSCAN_API_KEY']
-    url='https://rinkeby.etherscan.io/api?module=account&action=balance&address={0}&tag=latest&apikey={1}'.format(addr,api_key)
+    url='https://rinkeby.etherscan.io/api?module=account&action=balance&address={}&tag=latest&apikey={}'.format(addr,api_key)
     r=requests.get(url)
     data=r.json()
     bal=int(data['result'])
@@ -101,12 +101,12 @@ def version():
 if __name__ == '__main__':
     usage='''%(prog)s [-p phantom] [-d destroy]\n\nexample:\n./reaper.py -p -d'''
     parser=argparse.ArgumentParser(usage=usage)
-    parser.add_argument('-d','--destroy',action='store_true',help='destroy tweet',dest='destroy')
     parser.add_argument('-p','--phantom',action='store_true',help='run phantom browser',dest='phantom')
+    parser.add_argument('-d','--destroy',action='store_true',help='destroy tweet',dest='destroy')
     args=parser.parse_args()
     
-    destroy=args.destroy
     phantom=args.phantom
+    destroy=args.destroy
 
     uname,addr=version()
     print('\n==============================================\n')
