@@ -88,6 +88,12 @@ if __name__ == '__main__':
     if phantom:
         tweet_url,tweet_id=tweet_wallet()
         phantom_reap(tweet_url)
+        eth=check_bal()
+        funded=eth + 18
+        print(eth)
+        if eth < funded:
+            print('reaping..')
+            phantom_reap(tweet_url)
         time.sleep(3)
         destroy_tweet(tweet_id)
     else:
@@ -97,9 +103,8 @@ if __name__ == '__main__':
         funded=(eth) + 18
         print(eth)
         if eth < funded:
-            reap(tweet_url)
             print('reaping..')
-            time.sleep(3)
+            reap(tweet_url)
         time.sleep(3)
         destroy_tweet(tweet_id)
 
