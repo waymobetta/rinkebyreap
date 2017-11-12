@@ -8,7 +8,7 @@
 
 2. Add API credentials to `.bashrc` or `.env`
 
-3. Wallet address for testnet Ether
+3. Copy wallet address for testnet Ether
 
 4. Install required packages
 ```bash
@@ -17,7 +17,7 @@
 
 ### usage
 
-Run usage
+Run usage/help
 ```bash
 ./reaper.py -h
 ```
@@ -34,5 +34,6 @@ Run as phantom browser and delete tweet
 
 ### notes
 - Developed and tested on MacOS
+- Currently requests max amount of Ether (18.75/3 days)
 
 MIT
