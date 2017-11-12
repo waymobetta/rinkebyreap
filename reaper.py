@@ -72,7 +72,7 @@ def reap(tweet_url):
 
 def phantom_reap(tweet_url):
     chrome_options=Options()
-    chrome_options.add_argument('--phantom')
+    chrome_options.add_argument('--headless')
     # chrome_options.add_argument('--window-size=1920x1080')
     chrome_driver='./chromedriver'
     driver=webdriver.Chrome(chrome_options=chrome_options,executable_path=chrome_driver)
