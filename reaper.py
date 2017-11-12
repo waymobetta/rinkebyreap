@@ -17,6 +17,10 @@ try:
 except:
     sys.exit('[!] Twitter library not found. Please install before proceeding: pip install python-twitter\n')
 try:
+    from termcolor import cprint
+except:
+    sys.exit('[!] Termcolor library not found. Please install before proceeding: pip install termcolor\n')
+try:
     from selenium import webdriver
     from selenium.webdriver.common.keys import Keys
     from selenium.webdriver.chrome.options import Options
@@ -35,7 +39,7 @@ def check_bal():
 
 def tweet_wallet():
     statuses=api.GetUserTimeline(screen_name=uname)
-    status=api.PostUpdate(addr)
+    status=api.PostUpdate('Rinkeby wallet: ' + addr)
     data=str(status)
     json_obj=json.dumps(data)
     
@@ -61,7 +65,7 @@ def reap(tweet_url):
     elem.click()
     elem=driver.find_element_by_xpath('/html/body/div[1]/div/div[2]/div/div[1]/span/ul/li[3]/a') 
     elem.click()
-    time.sleep(5)
+    time.sleep(3)
     driver.close()
 
 def phantom_reap(tweet_url):
@@ -78,11 +82,21 @@ def phantom_reap(tweet_url):
     elem.click()
     elem=driver.find_element_by_xpath('/html/body/div[1]/div/div[2]/div/div[1]/span/ul/li[3]/a') 
     elem.click()
-    time.sleep(5)
+    time.sleep(3)
     driver.close()
 
 def destroy_tweet(tweet_id):
     api.DestroyStatus(tweet_id)
+
+def version():
+    if sys.version_info[0] < 3:
+        uname=raw_input('Enter Twitter username: ')
+        addr=raw_input('Enter wallet address: ')
+        return uname,addr
+    else:
+        uname=input('Enter Twitter username: ')
+        addr=input('Enter wallet address: ')
+        return uname,addr
 
 if __name__ == '__main__':
     usage='''%(prog)s [-p phantom] [-d destroy]\n\nexample:\n./reaper.py -p -d'''
@@ -94,33 +108,45 @@ if __name__ == '__main__':
     destroy=args.destroy
     phantom=args.phantom
 
-    uname=raw_input('Enter Twitter username: ')
-    addr=raw_input('Enter wallet address: ')
+    uname,addr=version()
+    print('\n=======================================\n')
 
-    api=twitter.Api(consumer_key=os.environ['TWITTER_CONSUMER_KEY'],consumer_secret=os.environ['TWITTER_CONSUMER_SECRET'],access_token_key=os.environ['TWITTER_ACCESS_TOKEN_KEY'],access_token_secret=os.environ['TWITTER_ACCESS_TOKEN_SECRET'])
+    api=twitter.Api(
+            consumer_key=os.environ['TWITTER_CONSUMER_KEY'],
+            consumer_secret=os.environ['TWITTER_CONSUMER_SECRET'],
+            access_token_key=os.environ['TWITTER_ACCESS_TOKEN_KEY'],
+            access_token_secret=os.environ['TWITTER_ACCESS_TOKEN_SECRET'])
 
     if phantom:
-        tweet_url,tweet_id=tweet_wallet()
-        phantom_reap(tweet_url)
+        cprint('- Running as phantom -','yellow')
+        print('\n')
+        #tweet_url,tweet_id=tweet_wallet()
+        #phantom_reap(tweet_url)
+        cprint('[+] Reaping..','cyan')
         eth=check_bal()
-        funded=eth + 18
-        # print(eth)
+        cprint('[+] Balance: {} Ether'.format(eth),'green')
+        funded=(eth-1) + 18
         while eth < funded:
-            print('reaping..')
-            phantom_reap(tweet_url)
+            cprint('[!] Captcha discovered. Retrying..','red')
+            #phantom_reap(tweet_url)
+            time.sleep(1)
         time.sleep(1)
         if destroy:
             destroy_tweet(tweet_id)
-    else:
-        tweet_url,tweet_id=tweet_wallet()
-        reap(tweet_url)
-        eth=check_bal()
-        funded=(eth) + 18
-        # print(eth)
-        while eth < funded:
-            print('reaping..')
-            reap(tweet_url)
+            cprint('[*] Tweet destroyed','green')
+
+    #tweet_url,tweet_id=tweet_wallet()
+    #reap(tweet_url)
+    cprint('[+] Reaping..','cyan')
+    eth=check_bal()
+    cprint('[+] Balance: {} Ether'.format(eth),'green')
+    funded=(eth-1) + 18
+    while eth < funded:
+        cprint('[!] Captcha discovered. Retrying..','red')
         time.sleep(1)
-        if destroy:
-            destroy_tweet(tweet_id)
+        #reap(tweet_url)
+    time.sleep(1)
+    if destroy:
+        destroy_tweet(tweet_id)
+        cprint('[*] Tweet destroyed','green')
 
