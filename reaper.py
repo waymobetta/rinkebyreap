@@ -4,12 +4,24 @@ import os
 import sys
 import time
 import json
-import twitter
-import requests
 import argparse
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.chrome.options import Options
+
+os.system('clear')
+
+try:
+    import requests
+except:
+    sys.exit('[!] Requests library not found. Please install before proceeding: pip install requests\n')
+try:
+    import twitter
+except:
+    sys.exit('[!] Twitter library not found. Please install before proceeding: pip install python-twitter\n')
+try:
+    from selenium import webdriver
+    from selenium.webdriver.common.keys import Keys
+    from selenium.webdriver.chrome.options import Options
+except:
+    sys.exit('[!] Selenium library not found. Please install before proceeding: pip install selenium\n')
 
 def check_bal():
     api_key=os.environ['ETHERSCAN_API_KEY']
