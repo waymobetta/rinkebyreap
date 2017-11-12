@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import sys
 import time
 import json
 import twitter
@@ -35,8 +36,7 @@ def tweet_wallet():
     d=json.loads(data)
     y=json.loads(d)
     tweet_id=(y['id'])
-    url='https://twitter.com/{}/status/{}'
-    tweet_url=url.format(uname,tweet_id)
+    tweet_url='https://twitter.com/{}/status/{}'.format(uname,tweet_id)
     return tweet_url,tweet_id
 
 def reap(tweet_url):
@@ -54,7 +54,7 @@ def reap(tweet_url):
 
 def phantom_reap(tweet_url):
     chrome_options=Options()
-    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--phantom')
     # chrome_options.add_argument('--window-size=1920x1080')
     chrome_driver='./chromedriver'
     driver=webdriver.Chrome(chrome_options=chrome_options,executable_path=chrome_driver)
@@ -73,11 +73,13 @@ def destroy_tweet(tweet_id):
     api.DestroyStatus(tweet_id)
 
 if __name__ == '__main__':
-    usage='''\n%(prog)s [-p phantom]\nexample:\n./reaper.py -p'''
+    usage='''%(prog)s [-p phantom] [-d destroy]\n\nexample:\n./reaper.py -p -d'''
     parser=argparse.ArgumentParser(usage=usage)
+    parser.add_argument('-d','--destroy',action='store_true',help='destroy tweet',dest='destroy')
     parser.add_argument('-p','--phantom',action='store_true',help='run phantom browser',dest='phantom')
     args=parser.parse_args()
-
+    
+    destroy=args.destroy
     phantom=args.phantom
 
     uname=raw_input('Enter Twitter username: ')
@@ -90,21 +92,23 @@ if __name__ == '__main__':
         phantom_reap(tweet_url)
         eth=check_bal()
         funded=eth + 18
-        print(eth)
-        if eth < funded:
+        # print(eth)
+        while eth < funded:
             print('reaping..')
             phantom_reap(tweet_url)
-        time.sleep(3)
-        destroy_tweet(tweet_id)
+        time.sleep(1)
+        if destroy:
+            destroy_tweet(tweet_id)
     else:
         tweet_url,tweet_id=tweet_wallet()
         reap(tweet_url)
         eth=check_bal()
         funded=(eth) + 18
-        print(eth)
-        if eth < funded:
+        # print(eth)
+        while eth < funded:
             print('reaping..')
             reap(tweet_url)
-        time.sleep(3)
-        destroy_tweet(tweet_id)
+        time.sleep(1)
+        if destroy:
+            destroy_tweet(tweet_id)
 
