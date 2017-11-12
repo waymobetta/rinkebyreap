@@ -1,9 +1,4 @@
-os
-sys
-time
-json
-python-twitter
-argparse
-requests
-selenium
-termcolor
+python-twitter==3.3
+requests==2.18.4
+selenium==3.4.3
+termcolor==1.1.0
