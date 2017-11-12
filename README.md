@@ -2,11 +2,15 @@
 
 ### requirements
 
-* Obtain API credentials for:
+1. Obtain API credentials for:
 	- Twitter (https://apps.twitter.com)
 	- Etherscan (https://etherscan.io/login?cmd=last)
 
-* Install required packages
+2. Add API credentials to `.bashrc` or `.env`
+
+3. Wallet address for testnet Ether
+
+4. Install required packages
 ```bash
 [sudo] pip install -r requirements.txt
 ```
@@ -28,5 +32,7 @@ Run as phantom browser and delete tweet
 ./reaper -p -d
 ```
 
+### notes
+- Developed and tested on MacOS
 
 MIT
