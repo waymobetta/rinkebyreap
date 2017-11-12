@@ -109,44 +109,55 @@ if __name__ == '__main__':
     phantom=args.phantom
 
     uname,addr=version()
-    print('\n=======================================\n')
+    print('\n==============================================\n')
 
     api=twitter.Api(
             consumer_key=os.environ['TWITTER_CONSUMER_KEY'],
             consumer_secret=os.environ['TWITTER_CONSUMER_SECRET'],
             access_token_key=os.environ['TWITTER_ACCESS_TOKEN_KEY'],
             access_token_secret=os.environ['TWITTER_ACCESS_TOKEN_SECRET'])
-
+ 
     if phantom:
         cprint('- Running as phantom -','yellow')
         print('\n')
-        #tweet_url,tweet_id=tweet_wallet()
-        #phantom_reap(tweet_url)
-        cprint('[+] Reaping..','cyan')
-        eth=check_bal()
-        cprint('[+] Balance: {} Ether'.format(eth),'green')
+
+        tweet_url,tweet_id=tweet_wallet()
+        cprint('[+] Generating authentication tweet..','cyan')
+        cprint('[*] Done','green')
+        cprint('[+] Requesting funds from faucet..','cyan')
+        phantom_reap(tweet_url)
+        eth=check_bal() 
+        cprint('[*] Balance: {} Ether'.format(eth),'yellow')
         funded=(eth-1) + 18
         while eth < funded:
-            cprint('[!] Captcha discovered. Retrying..','red')
-            #phantom_reap(tweet_url)
+            cprint('[!] Captcha discovered!','red')
+            cprint('[+] Retrying..','cyan')
+            phantom_reap(tweet_url)
             time.sleep(1)
         time.sleep(1)
+        cprint('[*] Done','green')
+        cprint('[*] Balance: {} Ether'.format(eth),'yellow')
         if destroy:
             destroy_tweet(tweet_id)
             cprint('[*] Tweet destroyed','green')
-
-    #tweet_url,tweet_id=tweet_wallet()
-    #reap(tweet_url)
-    cprint('[+] Reaping..','cyan')
-    eth=check_bal()
-    cprint('[+] Balance: {} Ether'.format(eth),'green')
-    funded=(eth-1) + 18
-    while eth < funded:
-        cprint('[!] Captcha discovered. Retrying..','red')
+    else:
+        tweet_url,tweet_id=tweet_wallet()
+        cprint('[+] Generating authentication tweet..','cyan')
+        cprint('[*] Done','green')
+        cprint('[+] Requesting funds from faucet..','cyan')
+        reap(tweet_url)
+        eth=check_bal()
+        cprint('[*] Balance: {} Ether'.format(eth),'yellow')
+        funded=(eth-1) + 18
+        while eth < funded:
+            cprint('[!] Captcha discovered!','red')
+            cprint('[+] Retrying..','cyan')
+            reap(tweet_url)
+            time.sleep(1)
         time.sleep(1)
-        #reap(tweet_url)
-    time.sleep(1)
-    if destroy:
-        destroy_tweet(tweet_id)
-        cprint('[*] Tweet destroyed','green')
+        cprint('[*] Done','green')
+        cprint('[*] Balance: {} Ether'.format(eth),'yellow')
+        if destroy:
+            destroy_tweet(tweet_id) 
+            cprint('[*] Tweet destroyed','green')
 
