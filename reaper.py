@@ -45,9 +45,11 @@ def tweet_wallet():
     
     with open('tweet.json','w') as f:
         f.write(json_obj)
+        f.close()
 
     with open('tweet.json','r') as f:
         data = f.read()
+        f.close()
 
     d=json.loads(data)
     y=json.loads(d)
@@ -134,6 +136,7 @@ if __name__ == '__main__':
             cprint('[!] Captcha discovered!','red')
             cprint('[+] Retrying..','cyan')
             phantom_reap(tweet_url)
+            eth=check_bal()
         cprint('[*] Done','green')
         cprint('[*] Balance: {} Ether'.format(eth),'yellow')
         if destroy:
@@ -153,6 +156,7 @@ if __name__ == '__main__':
             cprint('[!] Captcha discovered!','red')
             cprint('[+] Retrying..','cyan')
             reap(tweet_url)
+            eth=check_bal()
         cprint('[*] Done','green')
         cprint('[*] Balance: {} Ether'.format(eth),'yellow')
         if destroy:
