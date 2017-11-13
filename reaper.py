@@ -128,7 +128,7 @@ if __name__ == '__main__':
         cprint('[*] Done','green')
         cprint('[+] Requesting funds from faucet..','cyan')
         phantom_reap(tweet_url)
-        time.sleep(15)
+        time.sleep(10)
         eth=check_bal() 
         cprint('[*] Balance: {} Ether'.format(eth),'yellow')
         funded=eth + 18
@@ -136,6 +136,7 @@ if __name__ == '__main__':
             cprint('[!] Captcha discovered!','red')
             cprint('[+] Retrying..','cyan')
             phantom_reap(tweet_url)
+            time.sleep(10)
             eth=check_bal()
         cprint('[*] Done','green')
         cprint('[*] Balance: {} Ether'.format(eth),'yellow')
@@ -148,7 +149,7 @@ if __name__ == '__main__':
         cprint('[*] Done','green')
         cprint('[+] Requesting funds from faucet..','cyan')
         reap(tweet_url)
-        time.sleep(15)
+        time.sleep(10)
         eth=check_bal()
         cprint('[*] Balance: {} Ether'.format(eth),'yellow')
         funded=eth + 17
@@ -156,6 +157,7 @@ if __name__ == '__main__':
             cprint('[!] Captcha discovered!','red')
             cprint('[+] Retrying..','cyan')
             reap(tweet_url)
+            time.sleep(10)
             eth=check_bal()
         cprint('[*] Done','green')
         cprint('[*] Balance: {} Ether'.format(eth),'yellow')
