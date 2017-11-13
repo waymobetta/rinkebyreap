@@ -35,5 +35,6 @@ Run as phantom browser and delete tweet
 ### notes
 - Developed and tested on MacOS
 - Currently requests max amount of Ether (18.75/3 days)
+- Needs proper error handling
 
 MIT
