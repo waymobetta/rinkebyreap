@@ -120,48 +120,72 @@ if __name__ == '__main__':
             access_token_secret=os.environ['TWITTER_ACCESS_TOKEN_SECRET'])
  
     if phantom:
-        cprint('- Running as phantom -','yellow')
-        print('\n')
+        try:
+            cprint('- Running as phantom -','yellow')
+            print('\n')
 
-        tweet_url,tweet_id=tweet_wallet()
-        cprint('[+] Generating authentication tweet..','cyan')
-        cprint('[*] Done','green')
-        cprint('[+] Requesting funds from faucet..','cyan')
-        phantom_reap(tweet_url)
-        time.sleep(10)
-        eth=check_bal() 
-        cprint('[*] Balance: {} Ether'.format(eth),'yellow')
-        funded=eth + 18
-        while eth < funded:
-            cprint('[!] Captcha discovered!','red')
-            cprint('[+] Retrying..','cyan')
+            tweet_url,tweet_id=tweet_wallet()
+            cprint('[+] Generating authentication tweet..','cyan')
+            cprint('[*] Done','green')
+            cprint('[+] Requesting funds from faucet..','cyan')
             phantom_reap(tweet_url)
-            time.sleep(10)
-            eth=check_bal()
-        cprint('[*] Done','green')
-        cprint('[*] Balance: {} Ether'.format(eth),'yellow')
-        if destroy:
+            time.sleep(15)
+            eth=check_bal() 
+            cprint('[*] Balance: {} Ether'.format(eth),'yellow')
+            funded=eth + 17
+            while eth < funded:
+                cprint('[!] Captcha discovered!','red')
+                cprint('[+] Retrying..','cyan')
+                phantom_reap(tweet_url)
+                time.sleep(10)
+                eth=check_bal()
+            cprint('[*] Done','green')
+            cprint('[*] Balance: {} Ether'.format(eth),'yellow')
+            if destroy:
+                destroy_tweet(tweet_id)
+                cprint('[*] Tweet destroyed','green')
+        except KeyboardInterrupt:
             destroy_tweet(tweet_id)
+            print('\n')
             cprint('[*] Tweet destroyed','green')
+            sys.exit(1)
+        except:
+            destroy_tweet(tweet_id)
+            print('\n')
+            cprint('[*] Tweet destroyed','green')
+            cprint('[!] Error encountered. Exiting..\n','red')
+            sys.exit(1)
     else:
-        tweet_url,tweet_id=tweet_wallet()
-        cprint('[+] Generating authentication tweet..','cyan')
-        cprint('[*] Done','green')
-        cprint('[+] Requesting funds from faucet..','cyan')
-        reap(tweet_url)
-        time.sleep(10)
-        eth=check_bal()
-        cprint('[*] Balance: {} Ether'.format(eth),'yellow')
-        funded=eth + 17
-        while eth < funded:
-            cprint('[!] Captcha discovered!','red')
-            cprint('[+] Retrying..','cyan')
+        try:
+            tweet_url,tweet_id=tweet_wallet()
+            cprint('[+] Generating authentication tweet..','cyan')
+            cprint('[*] Done','green')
+            cprint('[+] Requesting funds from faucet..','cyan')
             reap(tweet_url)
-            time.sleep(10)
+            time.sleep(15)
             eth=check_bal()
-        cprint('[*] Done','green')
-        cprint('[*] Balance: {} Ether'.format(eth),'yellow')
-        if destroy:
-            destroy_tweet(tweet_id) 
+            cprint('[*] Balance: {} Ether'.format(eth),'yellow')
+            funded=eth + 17
+            while eth < funded:
+                cprint('[!] Captcha discovered!','red')
+                cprint('[+] Retrying..','cyan')
+                reap(tweet_url)
+                time.sleep(10)
+                eth=check_bal()
+            cprint('[*] Done','green')
+            cprint('[*] Balance: {} Ether'.format(eth),'yellow')
+            if destroy:
+                destroy_tweet(tweet_id) 
+                cprint('[*] Tweet destroyed','green')
+        except KeyboardInterrupt:
+            destroy_tweet(tweet_id)
+            print('\n')
             cprint('[*] Tweet destroyed','green')
+            sys.exit(1)
+        except:
+            destroy_tweet(tweet_id)
+            print('\n')
+            cprint('[*] Tweet destroyed','green')
+            cprint('[!] Error encountered. Exiting..\n','red')
+            sys.exit(1)
 
